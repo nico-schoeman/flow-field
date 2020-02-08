@@ -1,0 +1,12 @@
+{
+    "name": "flow-field",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Nico Schoeman",
+    "license": "ISC",
+    "dependencies": {}
+}
