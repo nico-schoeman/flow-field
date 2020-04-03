@@ -67,6 +67,10 @@ export default function flow_grid() {
     };
 
     console.log(this);
+
+    let goalCell = this.getCell(0,0);
+    console.log(goalCell);
+    this.generateFlowField(goalCell);
 }
 
 flow_grid.prototype.totalSize = function() {
@@ -164,8 +168,8 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
         let bestFlowCost = Number.MAX_SAFE_INTEGER;
         let bestNeighbor = null;
         this.getCellNeighbors(cell).forEach(neighbor => {
-            if (neighbor.flowCost(goal) < bestFlowCost) {
-                bestFlowCost = neighbor.flowCost(goal);
+            if (neighbor.flowCost(goal).cost < bestFlowCost) {
+                bestFlowCost = neighbor.flowCost(goal).cost;
                 bestNeighbor = neighbor;
             }
         });
