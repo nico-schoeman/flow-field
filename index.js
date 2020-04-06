@@ -20,6 +20,7 @@ flow_cell.prototype.flowCost = function(
     value = Number.MAX_SAFE_INTEGER,
     reset = false
 ) {
+    value += this.walkCost;
     if (
         !this.flowDataToGoal.has(goalCell) ||
         this.flowDataToGoal.get(goalCell).cost == Number.MAX_SAFE_INTEGER
@@ -145,7 +146,7 @@ flow_grid.prototype.floodFillDistanceToGoal = function (goal) {
 
         neighbors.forEach(neighbor => {
             if (neighbor.flowCost(goal).cost == Number.MAX_SAFE_INTEGER && !cellsToCheck.find((cell) => {return cell === neighbor})) {
-                neighbor.flowCost(goal, checkCell.flowCost(goal).cost + 1 + neighbor.walkCost);
+                neighbor.flowCost(goal, checkCell.flowCost(goal).cost + 1);
                 cellsToCheck.push(neighbor);
             }
         });
@@ -167,7 +168,12 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
 
         let bestFlowCost = Number.MAX_SAFE_INTEGER;
         let bestNeighbor = null;
+        //todo: do not flow to node that shares 1 or more non-walkable neighbors - test
         this.getCellNeighbors(cell).forEach(neighbor => {
+            let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(check => !check.isWalkable);
+            let myNeighbors = this.getCellNeighbors(cell, true).filter(check => !check.isWalkable);
+
+            if (!neighborNeighbors.some(check => myNeighbors.includes(check)))
             if (neighbor.flowCost(goal).cost < bestFlowCost) {
                 bestFlowCost = neighbor.flowCost(goal).cost;
                 bestNeighbor = neighbor;
