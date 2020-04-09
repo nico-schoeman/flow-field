@@ -1,8 +1,9 @@
 {
-    "name": "flow-field",
+    "name": "@nico-schoeman/flow-field",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "repository": "git://github.com/nico-schoeman/flow-field.git",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "auth": "npm login --registry=https://npm.pkg.github.com/",
