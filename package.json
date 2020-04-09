@@ -4,9 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "auth": "npm login --registry=https://npm.pkg.github.com/",
+        "publish": "npm publish"
     },
     "author": "Nico Schoeman",
     "license": "ISC",
-    "dependencies": {}
+    "dependencies": {},
+    "publishConfig": { "registry": "https://npm.pkg.github.com/" }
 }
