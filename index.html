@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>FlowField</title>
-</head>
-<body>
-    <canvas></canvas>
-    <script type="module">
-        import flow_grid from './index.js';
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>FlowField</title>
+	</head>
+	<body>
+		<canvas></canvas>
+		<script type="module">
+			import flow_grid from "./index.js";
 
-        let flowGrid = new flow_grid();
-        window.flowGrid = flowGrid;
-    </script>
-</body>
+			let flowGrid = new flow_grid();
+			window.flowGrid = flowGrid;
+
+			console.log(window.flowGrid);
+
+			let goalCell = window.flowGrid.getCell(0, 0);
+			console.log(goalCell);
+			window.flowGrid.generateFlowField(goalCell);
+		</script>
+	</body>
 </html>

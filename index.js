@@ -66,12 +66,6 @@ export default function flow_grid() {
             cell.y = y;
         }
     };
-
-    console.log(this);
-
-    let goalCell = this.getCell(0,0);
-    console.log(goalCell);
-    this.generateFlowField(goalCell);
 }
 
 flow_grid.prototype.totalSize = function() {
