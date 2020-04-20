@@ -51,6 +51,7 @@ flow_cell.prototype.flowVector = function(goalCell, x, y, reset) {
 
 export default function flow_grid() {
     this.grid = {};
+    this.waypoints = [];
 
     this.grid.sizeX = 10;
     this.grid.sizeY = 10;
@@ -89,17 +90,10 @@ flow_grid.prototype.setCell = function(newCell) {
     return (this.grid.cells[x + this.grid.sizeX * y] = newCell);
 };
 
-flow_grid.prototype.getCellFromWorldPoint = function(worldX, worldY) {
-    let x =
-        Math.abs(worldX % 1) < 0.5
-            ? Math.floor(Math.abs(worldX))
-            : Math.ceil(worldX);
-    let y =
-        Math.abs(worldY % 1) < 0.5
-            ? Math.floor(Math.abs(worldY))
-            : Math.ceil(worldY);
+flow_grid.prototype.getCellFromWorldPoint = function (worldX, worldY, cellWidth, cellHeight) {
+    let x = Math.floor(worldX / cellWidth);
+    let y = Math.floor(worldY / cellHeight);
     return this.getCell(x, y);
-    //TODO: this wont work
 };
 
 flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
