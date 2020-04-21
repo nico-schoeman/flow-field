@@ -27,9 +27,23 @@
             window.flowGrid.getCell(2, 2).isWalkable = false;
             window.flowGrid.getCell(2, 3).isWalkable = false;
 
+            window.flowGrid.getCell(2, 5).isBlocked = true;
+            window.flowGrid.getCell(2, 6).isBlocked = true;
+            window.flowGrid.getCell(2, 7).isBlocked = true;
+
+            window.flowGrid.getCell(7, 0).isWalkable = false;
+            window.flowGrid.getCell(7, 1).isWalkable = false;
+            window.flowGrid.getCell(8, 0).isWalkable = false;
+            window.flowGrid.getCell(8, 1).isWalkable = false;
+
+            window.flowGrid.getCell(7, 7).isBlocked = true;
+            window.flowGrid.getCell(7, 8).isBlocked = true;
+            window.flowGrid.getCell(8, 7).isBlocked = true;
+            window.flowGrid.getCell(8, 8).isBlocked = true;
+
 			let goalCell = window.flowGrid.getCell(3, 4);
 			console.log(goalCell);
-            window.flowGrid.calculateFlow(goalCell);
+            window.flowGrid.calculateFlowToGoal(goalCell);
 
             let canvas = document.querySelector("canvas");
             console.log(canvas);
@@ -40,6 +54,7 @@
                 let toCell = cell.flowDataToGoal.get(goalCell).toCell;
                 if (!cell.isWalkable) ctx.fillStyle = "red";
                 if (cell.isWalkable) ctx.fillStyle = "green";
+                if (cell.isBlocked) ctx.fillStyle = "yellow";
                 if (cell == goalCell) ctx.fillStyle = "blue";
                 ctx.fillRect(cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells), 5, 5);
                 ctx.beginPath();

@@ -173,10 +173,10 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
         let bestFlowCost = Number.MAX_SAFE_INTEGER;
         let bestNeighbor = null;
         this.getCellNeighbors(cell).forEach(neighbor => {
-            if (!neighbor.isWalkable && bestNeighbor != null) return;
+            if ((!neighbor.isWalkable || neighbor.isBlocked) && bestNeighbor != null) return;
 
-            let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(check => !check.isWalkable);
-            let myNeighbors = this.getCellNeighbors(cell, true).filter(check => !check.isWalkable);
+            let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(check => !check.isWalkable || check.isBlocked);
+            let myNeighbors = this.getCellNeighbors(cell, true).filter(check => !check.isWalkable || check.isBlocked);
 
             if (!neighborNeighbors.some(check => myNeighbors.includes(check)))
             if (neighbor.flowCost(goal).cost < bestFlowCost) {
@@ -191,9 +191,33 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
     });
 }
 
-flow_grid.prototype.calculateFlow = function (goal) {
+flow_grid.prototype.calculateFlowToGoal = function (goal) {
     this.floodFillDistanceToGoal(goal);
     this.generateFlowFieldVectors(goal);
+}
+
+flow_grid.prototype.recalculateFlow = function () {
+    this.waypoints.forEach(waypoint => {
+        this.calculateFlowToGoal(waypoint.cell);
+    });
+}
+
+flow_grid.prototype.clearFlowData = function () {
+    this.grid.cells.forEach(cell => {
+        cell.flowDataToGoal = new WeakMap();
+    });
+}
+
+flow_grid.prototype.addWaypoint = function (cell, group = null, isStart = false, isEnd = false) {
+    this.waypoints.push({cell:cell, group:group, isStart:isStart, isEnd:isEnd});
+}
+
+flow_grid.prototype.removeWaypoint = function (cell) {
+    this.waypoints = this.waypoints.filter(waypoint => waypoint.cell != cell);
+}
+
+flow_grid.prototype.validateFlow = function (blockedCell) {
+    //TODO: validate if flow still works if given cell is blocked in future
 }
 
 // public List<T> GetCellsOnLine (Vector2 point1, Vector2 point2) {
