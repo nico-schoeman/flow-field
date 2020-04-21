@@ -2,15 +2,15 @@ export function flow_cell(
     x = null,
     y = null,
     walkCost = 0,
-    isGoal = false,
     isBuildable = false,
-    isWalkable = false
+    isWalkable = false,
+    isBlocked = false
 ) {
     this.x = x;
     this.y = y;
-    this.isGoal = isGoal;
     this.isBuildable = isBuildable;
     this.isWalkable = isWalkable;
+    this.isBlocked = isBlocked;
     this.walkCost = walkCost;
     this.flowDataToGoal = new WeakMap(); // use set/get
 }
@@ -36,25 +36,26 @@ flow_cell.prototype.flowCost = function(
 };
 
 // //TODO Use walk values in flow direction calculation
-flow_cell.prototype.flowVector = function(goalCell, x, y, reset) {
+flow_cell.prototype.flowVector = function(goalCell, xVector, yVector, reset = false, toCell = null) {
     if (!this.flowDataToGoal.has(goalCell)) {
-        let flowData = { x: x, y: y };
+        let flowData = { xVector: xVector, yVector: yVector, toCell: toCell };
         this.flowDataToGoal.set(goalCell, flowData);
     } else if (reset) {
         let flowData = this.flowDataToGoal.get(goalCell);
-        flowData.x = x;
-        flowData.y = y;
+        flowData.xVector = xVector;
+        flowData.yVector = yVector;
+        flowData.toCell = toCell;
         this.flowDataToGoal.set(goalCell, flowData);
     }
     return this.flowDataToGoal.get(goalCell);
 };
 
-export default function flow_grid() {
+export default function flow_grid(width = 10, height = 10) {
     this.grid = {};
     this.waypoints = [];
 
-    this.grid.sizeX = 10;
-    this.grid.sizeY = 10;
+    this.grid.sizeX = width;
+    this.grid.sizeY = height;
 
     this.grid.cells = new Array(this.totalSize.call(this))
         .fill()
@@ -95,6 +96,21 @@ flow_grid.prototype.getCellFromWorldPoint = function (worldX, worldY, cellWidth,
     let y = Math.floor(worldY / cellHeight);
     return this.getCell(x, y);
 };
+
+flow_grid.prototype.getXFromWorldPoint = function (worldX, cellWidth) {
+    return Math.floor(worldX / cellWidth)
+}
+
+flow_grid.prototype.getYFromWorldPoint = function (worldY, cellHeight) {
+    return Math.floor(worldY / cellHeight)
+}
+
+flow_grid.prototype.getFlowDistanceToCell = function (fromCell, toCell, distance = 0) {
+    distance++;
+    let newDistance = fromCell != toCell ?
+        this.getFlowDistanceToCell(fromCell.flowDataToGoal.get(toCell).toCell, toCell, distance) : distance;
+    return newDistance;
+}
 
 flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
     let neighbours = [];
@@ -156,8 +172,9 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
 
         let bestFlowCost = Number.MAX_SAFE_INTEGER;
         let bestNeighbor = null;
-        //todo: do not flow to node that shares 1 or more non-walkable neighbors - test
         this.getCellNeighbors(cell).forEach(neighbor => {
+            if (!neighbor.isWalkable && bestNeighbor != null) return;
+
             let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(check => !check.isWalkable);
             let myNeighbors = this.getCellNeighbors(cell, true).filter(check => !check.isWalkable);
 
@@ -168,13 +185,13 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
             }
         });
 
-        let x = bestNeighbor.x - cell.x;
-        let y = bestNeighbor.y - cell.y;
-        cell.flowVector(goal, x, y, true);
+        let xVector = bestNeighbor.x - cell.x;
+        let yVector = bestNeighbor.y - cell.y;
+        cell.flowVector(goal, xVector, yVector, true, bestNeighbor);
     });
 }
 
-flow_grid.prototype.generateFlowField = function (goal) {
+flow_grid.prototype.calculateFlow = function (goal) {
     this.floodFillDistanceToGoal(goal);
     this.generateFlowFieldVectors(goal);
 }
