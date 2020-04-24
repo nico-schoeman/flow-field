@@ -218,6 +218,13 @@ flow_grid.prototype.removeWaypoint = function (cell) {
 
 flow_grid.prototype.validateFlow = function (blockedCell) {
     //TODO: validate if flow still works if given cell is blocked in future
+    let copy = JSON.parse(JSON.stringify(this))
+    let newFlowGrid = new flow_grid(copy.grid.sizeX, copy.grid.sizeY);
+    newFlowGrid.grid.cells = [...copy.grid.cells];
+    newFlowGrid.waypoints = [...copy.waypoints];
+    newFlowGrid.grid.cells[0].isBlocked = true;
+
+    console.log(copy, newFlowGrid);
 }
 
 // public List<T> GetCellsOnLine (Vector2 point1, Vector2 point2) {
