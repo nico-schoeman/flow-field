@@ -173,13 +173,21 @@ flow_grid.prototype.generateFlowFieldVectors = function (goal) {
         let bestFlowCost = Number.MAX_SAFE_INTEGER;
         let bestNeighbor = null;
         this.getCellNeighbors(cell).forEach(neighbor => {
-            if ((!neighbor.isWalkable || neighbor.isBlocked) && bestNeighbor != null) return;
+            //if ((!neighbor.isWalkable || neighbor.isBlocked) && bestNeighbor != null && bestNeighbor.isWalkable && !bestNeighbor.isBlocked) return;
 
             let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(check => !check.isWalkable || check.isBlocked);
             let myNeighbors = this.getCellNeighbors(cell, true).filter(check => !check.isWalkable || check.isBlocked);
 
             if (!neighborNeighbors.some(check => myNeighbors.includes(check)))
-            if (neighbor.flowCost(goal).cost < bestFlowCost) {
+            if (
+                (neighbor.isWalkable && neighbor.flowCost(goal).cost < bestFlowCost)
+                ||
+                (bestNeighbor != null && neighbor.isWalkable > bestNeighbor.isWalkable)
+                ||
+                (bestNeighbor != null && bestNeighbor.isBlocked)
+                ||
+                (bestNeighbor == null)
+                ) {
                 bestFlowCost = neighbor.flowCost(goal).cost;
                 bestNeighbor = neighbor;
             }
@@ -208,8 +216,8 @@ flow_grid.prototype.clearFlowData = function () {
     });
 }
 
-flow_grid.prototype.addWaypoint = function (cell, group = null, isStart = false, isEnd = false) {
-    this.waypoints.push({cell:cell, group:group, isStart:isStart, isEnd:isEnd});
+flow_grid.prototype.addWaypoint = function (cell, link = null, group = null, isStart = false, isEnd = false) {
+    this.waypoints.push({cell:cell, link:link, group:group, isStart:isStart, isEnd:isEnd});
 }
 
 flow_grid.prototype.removeWaypoint = function (cell) {
@@ -222,9 +230,12 @@ flow_grid.prototype.validateFlow = function (blockedCell) {
     let newFlowGrid = new flow_grid(copy.grid.sizeX, copy.grid.sizeY);
     newFlowGrid.grid.cells = [...copy.grid.cells];
     newFlowGrid.waypoints = [...copy.waypoints];
-    newFlowGrid.grid.cells[0].isBlocked = true;
+    //newFlowGrid.grid.cells[0].isBlocked = true;
+    let cellToBlock = newFlowGrid.getCell(blockedCell.x, blockedCell.y);
+    cellToBlock.isBlocked = !cellToBlock.isBlocked;
+    //Check FlowData in copy
 
-    console.log(copy, newFlowGrid);
+    console.log(this.grid, copy, newFlowGrid);
 }
 
 // public List<T> GetCellsOnLine (Vector2 point1, Vector2 point2) {

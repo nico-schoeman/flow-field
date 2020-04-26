@@ -36,10 +36,19 @@
             window.flowGrid.getCell(8, 0).isWalkable = false;
             window.flowGrid.getCell(8, 1).isWalkable = false;
 
+            window.flowGrid.getCell(6, 6).isBlocked = true;
+            window.flowGrid.getCell(6, 7).isBlocked = true;
+            window.flowGrid.getCell(6, 8).isBlocked = true;
+            window.flowGrid.getCell(7, 6).isBlocked = true;
             window.flowGrid.getCell(7, 7).isBlocked = true;
             window.flowGrid.getCell(7, 8).isBlocked = true;
-            window.flowGrid.getCell(8, 7).isBlocked = true;
-            window.flowGrid.getCell(8, 8).isBlocked = true;
+
+            window.flowGrid.getCell(4, 6).isWalkable = false;
+            window.flowGrid.getCell(4, 7).isWalkable = false;
+            window.flowGrid.getCell(4, 8).isWalkable = false;
+            window.flowGrid.getCell(5, 6).isWalkable = false;
+            window.flowGrid.getCell(5, 7).isWalkable = false;
+            window.flowGrid.getCell(5, 8).isWalkable = false;
 
 			let goalCell = window.flowGrid.getCell(3, 4);
 			console.log(goalCell);
@@ -67,7 +76,7 @@
             let distanceTest = window.flowGrid.getFlowDistanceToCell(window.flowGrid.getCell(0, 0), goalCell);
             console.log("distance:", distanceTest);
 
-            window.flowGrid.validateFlow();
+            window.flowGrid.validateFlow(window.flowGrid.getCell(0, 0));
 		</script>
 	</body>
 </html>
