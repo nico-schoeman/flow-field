@@ -206,7 +206,7 @@ flow_grid.prototype.calculateFlowToGoal = function (goal) {
 
 flow_grid.prototype.recalculateFlow = function () {
     this.waypoints.forEach(waypoint => {
-        this.calculateFlowToGoal(waypoint.cell);
+        this.calculateFlowToGoal(this.getCell(waypoint.x, waypoint.y));
     });
 }
 
@@ -216,8 +216,8 @@ flow_grid.prototype.clearFlowData = function () {
     });
 }
 
-flow_grid.prototype.addWaypoint = function (cell, link = null, group = null, isStart = false, isEnd = false) {
-    this.waypoints.push({cell:cell, link:link, group:group, isStart:isStart, isEnd:isEnd});
+flow_grid.prototype.addWaypoint = function (x, y, links = [], group = null, isStart = false, isEnd = false) {
+    this.waypoints.push({x:x, y:y, links:links, group:group, isStart:isStart, isEnd:isEnd});
 }
 
 flow_grid.prototype.removeWaypoint = function (cell) {
