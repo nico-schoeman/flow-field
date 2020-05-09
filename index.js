@@ -4,7 +4,9 @@ export function flow_cell(
     walkCost = 0,
     isBuildable = false,
     isWalkable = false,
-    isBlocked = false
+    isBlocked = false,
+    isObservable = true,
+    occupier = null
 ) {
     this.x = x;
     this.y = y;
@@ -12,6 +14,8 @@ export function flow_cell(
     this.isWalkable = isWalkable;
     this.isBlocked = isBlocked;
     this.walkCost = walkCost;
+    this.isObservable = isObservable;
+    this.occupier = occupier;
     this.flowDataToGoal = new WeakMap(); // use set/get
 }
 
