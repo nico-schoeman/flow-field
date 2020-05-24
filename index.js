@@ -21,10 +21,10 @@ export function flow_cell(
 
 flow_cell.prototype.flowCost = function(goalCell, value = Number.MAX_SAFE_INTEGER, reset = false) {
 	value += this.walkCost;
-	if (!this.flowDataToGoal.has(goalCell) || this.flowDataToGoal.get(goalCell).cost == Number.MAX_SAFE_INTEGER) {
+	if (!this.flowDataToGoal.has(goalCell) || !this.flowDataToGoal.get(goalCell).hasOwnProperty('cost')) {
 		let flowData = { cost: value };
 		this.flowDataToGoal.set(goalCell, flowData);
-	} else if (reset || !this.flowDataToGoal.get(goalCell).hasOwnProperty('cost')) {
+	} else if (reset || this.flowDataToGoal.get(goalCell).cost >= Number.MAX_SAFE_INTEGER) {
 		let flowData = this.flowDataToGoal.get(goalCell);
 		flowData.cost = value;
 		this.flowDataToGoal.set(goalCell, flowData);
@@ -136,13 +136,11 @@ flow_grid.prototype.floodFillDistanceToGoal = function(goal) {
 		let neighbors = this.getCellNeighbors(checkCell, true);
 
 		neighbors.forEach(neighbor => {
-			if (
-				neighbor.flowCost(goal).cost == Number.MAX_SAFE_INTEGER &&
-				!cellsToCheck.find(cell => {
-					return cell === neighbor;
-				})
-			) {
-				neighbor.flowCost(goal, checkCell.flowCost(goal).cost + 1);
+			let currentCost = neighbor.flowCost(goal).cost;
+			let flowcost = 1;
+			flowcost += checkCell.flowCost(goal).cost;
+			if (currentCost == Number.MAX_SAFE_INTEGER || flowcost < currentCost) {
+				neighbor.flowCost(goal, flowcost);
 				cellsToCheck.push(neighbor);
 			}
 		});
@@ -190,7 +188,17 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 	});
 };
 
+flow_grid.prototype.calculateWalkCost = function() {
+	this.grid.cells.forEach(cell => {
+		cell.walkCost = 0;
+		if (!cell.isWalkable) cell.walkCost += 1000;
+		if (cell.isBuildable) cell.walkCost += 100;
+		if (cell.isBlocked) cell.walkCost += 500;
+	});
+};
+
 flow_grid.prototype.calculateFlowToGoal = function(goal) {
+	this.calculateWalkCost();
 	this.floodFillDistanceToGoal(goal);
 	this.generateFlowFieldVectors(goal);
 };
