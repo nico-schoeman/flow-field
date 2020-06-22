@@ -174,7 +174,7 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 				if (
 					(neighbor.isWalkable && neighbor.flowCost(goal).cost < bestFlowCost) ||
 					(bestNeighbor != null && neighbor.isWalkable > bestNeighbor.isWalkable) ||
-					(bestNeighbor != null && bestNeighbor.isBlocked) ||
+					//(bestNeighbor != null && bestNeighbor.isBlocked) ||
 					bestNeighbor == null
 				) {
 					bestFlowCost = neighbor.flowCost(goal).cost;
