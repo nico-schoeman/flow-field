@@ -9,74 +9,82 @@
 	<body>
 		<canvas></canvas>
 		<script type="module">
-            import flow_grid from "./index.js";
+			import flow_grid from './index.js';
 
-            let xCells = 9;
-            let yCells = 9;
+			let xCells = 9;
+			let yCells = 9;
 
 			let flowGrid = new flow_grid(xCells, yCells);
 			window.flowGrid = flowGrid;
 
-            console.log(window.flowGrid);
+			console.log(window.flowGrid);
 
-            window.flowGrid.grid.cells.forEach(cell => {
-                cell.isWalkable = true;
-            });
+			window.flowGrid.grid.cells.forEach(cell => {
+				cell.isWalkable = true;
+			});
 
-            window.flowGrid.getCell(2, 1).isWalkable = false;
-            window.flowGrid.getCell(2, 2).isWalkable = false;
-            window.flowGrid.getCell(2, 3).isWalkable = false;
+      window.flowGrid.getCell(2, 0).isWalkable = false;
+			window.flowGrid.getCell(2, 1).isWalkable = false;
+			window.flowGrid.getCell(2, 2).isWalkable = false;
+			window.flowGrid.getCell(2, 3).isWalkable = false;
 
-            window.flowGrid.getCell(2, 5).isBlocked = true;
-            window.flowGrid.getCell(2, 6).isBlocked = true;
-            window.flowGrid.getCell(2, 7).isBlocked = true;
+			window.flowGrid.getCell(2, 5).isBlocked = true;
+			window.flowGrid.getCell(2, 6).isBlocked = true;
+			window.flowGrid.getCell(2, 7).isBlocked = true;
+      //window.flowGrid.getCell(2, 8).isBlocked = true;
 
-            window.flowGrid.getCell(7, 0).isWalkable = false;
-            window.flowGrid.getCell(7, 1).isWalkable = false;
-            window.flowGrid.getCell(8, 0).isWalkable = false;
-            window.flowGrid.getCell(8, 1).isWalkable = false;
+			window.flowGrid.getCell(7, 0).isWalkable = false;
+			window.flowGrid.getCell(7, 1).isWalkable = false;
+			window.flowGrid.getCell(8, 0).isWalkable = false;
+			window.flowGrid.getCell(8, 1).isWalkable = false;
 
-            window.flowGrid.getCell(6, 6).isBlocked = true;
-            window.flowGrid.getCell(6, 7).isBlocked = true;
-            window.flowGrid.getCell(6, 8).isBlocked = true;
-            window.flowGrid.getCell(7, 6).isBlocked = true;
-            window.flowGrid.getCell(7, 7).isBlocked = true;
-            window.flowGrid.getCell(7, 8).isBlocked = true;
+			window.flowGrid.getCell(6, 6).isBlocked = true;
+			window.flowGrid.getCell(6, 7).isBlocked = true;
+			window.flowGrid.getCell(6, 8).isBlocked = true;
+			window.flowGrid.getCell(7, 6).isBlocked = true;
+			window.flowGrid.getCell(7, 7).isBlocked = true;
+			window.flowGrid.getCell(7, 8).isBlocked = true;
 
-            window.flowGrid.getCell(4, 6).isWalkable = false;
-            window.flowGrid.getCell(4, 7).isWalkable = false;
-            window.flowGrid.getCell(4, 8).isWalkable = false;
-            window.flowGrid.getCell(5, 6).isWalkable = false;
-            window.flowGrid.getCell(5, 7).isWalkable = false;
-            window.flowGrid.getCell(5, 8).isWalkable = false;
+			window.flowGrid.getCell(4, 6).isWalkable = false;
+			window.flowGrid.getCell(4, 7).isWalkable = false;
+			window.flowGrid.getCell(4, 8).isWalkable = false;
+			window.flowGrid.getCell(5, 6).isWalkable = false;
+			window.flowGrid.getCell(5, 7).isWalkable = false;
+			window.flowGrid.getCell(5, 8).isWalkable = false;
 
 			let goalCell = window.flowGrid.getCell(3, 4);
 			console.log(goalCell);
-            window.flowGrid.calculateFlowToGoal(goalCell);
+			window.flowGrid.calculateFlowToGoal(goalCell);
 
-            let canvas = document.querySelector("canvas");
-            console.log(canvas);
-            let ctx = canvas.getContext("2d");
+			let distanceTest = window.flowGrid.getFlowDistanceToCell(window.flowGrid.getCell(0, 0), goalCell);
+			console.log('distance:', distanceTest);
 
-            window.flowGrid.grid.cells.forEach(cell => {
-                ctx.fillStyle = "black"
-                let toCell = cell.flowDataToGoal.get(goalCell).toCell;
-                if (!cell.isWalkable) ctx.fillStyle = "red";
-                if (cell.isWalkable) ctx.fillStyle = "green";
-                if (cell.isBlocked) ctx.fillStyle = "yellow";
-                if (cell == goalCell) ctx.fillStyle = "blue";
-                ctx.fillRect(cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells), 5, 5);
-                ctx.beginPath();
-                ctx.moveTo(cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells));
-                ctx.lineTo(toCell.x * (canvas.width / xCells), toCell.y * (canvas.height / yCells));
-                ctx.stroke();
-                ctx.closePath();
-            });
+			window.flowGrid.validateFlow(window.flowGrid.getCell(0, 0));
 
-            let distanceTest = window.flowGrid.getFlowDistanceToCell(window.flowGrid.getCell(0, 0), goalCell);
-            console.log("distance:", distanceTest);
+      window.flowGrid.getCell(2, 4).isBlocked = true;
+      window.flowGrid.calculateFlowToGoal(goalCell);
 
-            window.flowGrid.validateFlow(window.flowGrid.getCell(0, 0));
+
+
+      let canvas = document.querySelector('canvas');
+			console.log(canvas);
+			let ctx = canvas.getContext('2d');
+
+			window.flowGrid.grid.cells.forEach(cell => {
+				ctx.fillStyle = 'black';
+				let toCell = cell.flowDataToGoal.get(goalCell).toCell;
+				if (!cell.isWalkable) ctx.fillStyle = 'red';
+				if (cell.isWalkable) ctx.fillStyle = 'green';
+				if (cell.isBlocked) ctx.fillStyle = 'yellow';
+				if (cell == goalCell) ctx.fillStyle = 'blue';
+				ctx.fillRect(cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells), 5, 5);
+				ctx.beginPath();
+				ctx.moveTo(cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells));
+				ctx.lineTo(toCell.x * (canvas.width / xCells), toCell.y * (canvas.height / yCells));
+				ctx.stroke();
+				ctx.closePath();
+        ctx.strokeText(cell.flowCost(goalCell).cost, cell.x * (canvas.width / xCells), cell.y * (canvas.height / yCells));
+			});
 		</script>
 	</body>
 </html>

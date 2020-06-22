@@ -188,17 +188,18 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 	});
 };
 
-flow_grid.prototype.calculateWalkCost = function() {
+flow_grid.prototype.calculateWalkCost = function(goal) {
 	this.grid.cells.forEach(cell => {
 		cell.walkCost = 0;
-		if (!cell.isWalkable) cell.walkCost += 1000;
+		if (!cell.isWalkable) cell.walkCost += 10000;
 		if (cell.isBuildable) cell.walkCost += 100;
-		if (cell.isBlocked) cell.walkCost += 500;
+		if (cell.isBlocked) cell.walkCost += 1000;
+    cell.flowCost(goal, Number.MAX_SAFE_INTEGER, true);
 	});
 };
 
 flow_grid.prototype.calculateFlowToGoal = function(goal) {
-	this.calculateWalkCost();
+	this.calculateWalkCost(goal);
 	this.floodFillDistanceToGoal(goal);
 	this.generateFlowFieldVectors(goal);
 };
