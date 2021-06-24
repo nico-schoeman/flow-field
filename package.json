@@ -1,6 +1,6 @@
 {
     "name": "@nico-schoeman/flow-field",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "description": "Grid based pathfinding based on node flow.",
     "main": "index.js",
     "scripts": {

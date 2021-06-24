@@ -133,6 +133,7 @@ flow_grid.prototype.floodFillDistanceToGoal = function(goal) {
 
 	while (cellsToCheck.length > 0) {
 		let checkCell = cellsToCheck.shift();
+    checkedCells.push(checkCell);
 		let neighbors = this.getCellNeighbors(checkCell, true);
 
 		neighbors.forEach(neighbor => {
@@ -141,11 +142,9 @@ flow_grid.prototype.floodFillDistanceToGoal = function(goal) {
 			flowcost += checkCell.flowCost(goal).cost;
 			if (currentCost == Number.MAX_SAFE_INTEGER || flowcost < currentCost) {
 				neighbor.flowCost(goal, flowcost);
-				cellsToCheck.push(neighbor);
+				if (!cellsToCheck.includes(neighbor) && !checkedCells.includes(neighbor)) cellsToCheck.push(neighbor);
 			}
 		});
-
-		checkedCells.push(checkCell);
 
 		cellsToCheck.sort((a, b) => {
 			if (a.walkCost == b.walkCost) return 0;
