@@ -217,7 +217,9 @@ flow_grid.prototype.clearFlowData = function() {
 };
 
 flow_grid.prototype.addWaypoint = function(x, y, links = [], group = null, isStart = false, isEnd = false) {
-	this.waypoints.push({ x: x, y: y, links: links, group: group, isStart: isStart, isEnd: isEnd });
+  let waypoint = { x: x, y: y, links: links, group: group, isStart: isStart, isEnd: isEnd };
+	this.waypoints.push(waypoint);
+  return waypoint;
 };
 
 flow_grid.prototype.removeWaypoint = function(cell) {
