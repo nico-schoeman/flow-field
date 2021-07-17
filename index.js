@@ -125,8 +125,8 @@ flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
 
 flow_grid.prototype.getClosestOpenCells = function(cell, trueProp = 'isBuildable') {
   let neighbors = this.getCellNeighbors(cell);
-  let checkNeighbors;
-  let openNeighbors;
+  let checkNeighbors = [];
+  let openNeighbors = [];
   while (!openNeighbors.length) {
     openNeighbors = neighbors.filter(x => !x.occupier && !x.isBlocked && x[trueProp]);
 
