@@ -123,6 +123,26 @@ flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
 	return neighbours;
 };
 
+flow_grid.prototype.getClosestOpenCells = function(cell, trueProp = 'isBuildable') {
+  let neighbors = this.getCellNeighbors(cell);
+  let checkNeighbors;
+  let openNeighbors;
+  while (!openNeighbors.length) {
+    openNeighbors = neighbors.filter(x => !x.occupier && !x.isBlocked && x[trueProp]);
+
+    if (openNeighbors.length) break;
+
+    checkNeighbors.push(neighbors);
+    let newNeighbors;
+    neighbors.forEach(x => newNeighbors.push(this.getCellNeighbors(x)));
+    neighbors = newNeighbors.filter(x => !checkNeighbors.includes(x));
+
+    if (!neighbors.length) return null;
+  }
+
+  return openNeighbors;
+}
+
 flow_grid.prototype.floodFillDistanceToGoal = function(goal) {
 	this.grid.cells.forEach(cell => cell.flowCost(goal));
 
@@ -162,8 +182,6 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 		let bestFlowCost = Number.MAX_SAFE_INTEGER;
 		let bestNeighbor = null;
 		this.getCellNeighbors(cell).forEach(neighbor => {
-			//if ((!neighbor.isWalkable || neighbor.isBlocked) && bestNeighbor != null && bestNeighbor.isWalkable && !bestNeighbor.isBlocked) return;
-
 			let neighborNeighbors = this.getCellNeighbors(neighbor, true).filter(
 				check => !check.isWalkable || check.isBlocked,
 			);
@@ -173,7 +191,6 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 				if (
 					(neighbor.isWalkable && neighbor.flowCost(goal).cost < bestFlowCost) ||
 					(bestNeighbor != null && neighbor.isWalkable > bestNeighbor.isWalkable) ||
-					//(bestNeighbor != null && bestNeighbor.isBlocked) ||
 					bestNeighbor == null
 				) {
 					bestFlowCost = neighbor.flowCost(goal).cost;
