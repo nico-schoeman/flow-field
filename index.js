@@ -133,7 +133,7 @@ flow_grid.prototype.getClosestOpenCells = function(cell, trueProp = 'isBuildable
     if (openNeighbors.length) break;
 
     checkNeighbors.push(neighbors);
-    let newNeighbors;
+    let newNeighbors = [];
     neighbors.forEach(x => newNeighbors.push(this.getCellNeighbors(x)));
     neighbors = newNeighbors.filter(x => !checkNeighbors.includes(x));
 
