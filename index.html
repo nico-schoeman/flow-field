@@ -64,7 +64,7 @@
       window.flowGrid.getCell(2, 4).isBlocked = true;
       window.flowGrid.calculateFlowToGoal(goalCell);
 
-
+      console.log(window.flowGrid.getClosestOpenCells(window.flowGrid.getCell(6, 7), 'isWalkable'));
 
       let canvas = document.querySelector('canvas');
 			console.log(canvas);

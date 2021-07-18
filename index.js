@@ -124,17 +124,24 @@ flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
 };
 
 flow_grid.prototype.getClosestOpenCells = function(cell, trueProp = 'isBuildable') {
-  let neighbors = this.getCellNeighbors(cell);
+  let neighbors = [];
   let checkNeighbors = [];
   let openNeighbors = [];
-  while (!openNeighbors.length) {
+
+  neighbors = this.getCellNeighbors(cell);
+  checkNeighbors.push(cell);
+  let checks = 0;
+
+  while (!openNeighbors.length && checks < 5) {
+    checks++;
     openNeighbors = neighbors.filter(x => !x.occupier && !x.isBlocked && x[trueProp]);
 
     if (openNeighbors.length) break;
 
     checkNeighbors.push(neighbors);
     let newNeighbors = [];
-    neighbors.forEach(x => newNeighbors.push(this.getCellNeighbors(x)));
+    neighbors.forEach(x => newNeighbors.push(...this.getCellNeighbors(x)));
+    newNeighbors = [...new Set(newNeighbors)];
     neighbors = newNeighbors.filter(x => !checkNeighbors.includes(x));
 
     if (!neighbors.length) return null;
