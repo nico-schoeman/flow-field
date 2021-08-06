@@ -32,7 +32,6 @@ flow_cell.prototype.flowCost = function(goalCell, value = Number.MAX_SAFE_INTEGE
 	return this.flowDataToGoal.get(goalCell);
 };
 
-// //TODO Use walk values in flow direction calculation
 flow_cell.prototype.flowVector = function(goalCell, xVector, yVector, reset = false, toCell = null) {
 	if (!this.flowDataToGoal.has(goalCell)) {
 		let flowData = { xVector: xVector, yVector: yVector, toCell: toCell };
@@ -213,11 +212,11 @@ flow_grid.prototype.generateFlowFieldVectors = function(goal) {
 
 flow_grid.prototype.calculateWalkCost = function(goal) {
 	this.grid.cells.forEach(cell => {
-		cell.walkCost = 0;
+		cell.walkCost = 1;
 		if (!cell.isWalkable) cell.walkCost += 10000;
-		if (cell.isBuildable) cell.walkCost += 100;
-		if (cell.isBlocked) cell.walkCost += 1000;
-    cell.flowCost(goal, Number.MAX_SAFE_INTEGER, true);
+		if (cell.isBuildable) cell.walkCost += 10;
+		if (cell.isBlocked) cell.walkCost += 1000000;
+    cell.flowCost(goal, 0, true);
 	});
 };
 
