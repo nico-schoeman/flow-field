@@ -112,7 +112,6 @@ flow_grid.prototype.getCellNeighbors = function(cell, cross = false) {
 
 			let checkX = cell.x + x;
 			let checkY = cell.y + y;
-			//TODO: how to handle position props?
 
 			if (checkX >= 0 && checkX < this.grid.sizeX && checkY >= 0 && checkY < this.grid.sizeY)
 				neighbours.push(this.getCell(checkX, checkY));
@@ -216,7 +215,7 @@ flow_grid.prototype.calculateWalkCost = function(goal) {
 		if (!cell.isWalkable) cell.walkCost += 10000;
 		if (cell.isBuildable) cell.walkCost += 10;
 		if (cell.isBlocked) cell.walkCost += 1000000;
-    cell.flowCost(goal, 0, true);
+    cell.flowCost(goal, Number.MAX_SAFE_INTEGER, true);
 	});
 };
 
